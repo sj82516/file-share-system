@@ -1,52 +1,16 @@
 version: '3'
-x-services:
-  &rails-service
-  volumes:
-    - .:/app:cached
-    - ~/.ssh:/root/.ssh:cached
-    - ~/.aws:/root/.aws:cached
-    - bundle:/bundle:cached
-  ports:
-    - 3000:3000
-  env_file:
-    - .env
 
 services:
   rails:
     build:
       context: .
       dockerfile: ./Dockerfile
-      target: server
-    image: rails
-    profiles:
-      - backend
-    <<: *rails-service
-
-  rails-test:
-    build:
-      context: .
-      dockerfile: ./docker/Dockerfile
-      target: test
-    image: rails-test
     depends_on:
       - mysql
-      - redis
-    profiles:
-      - rails-test
-    <<: *rails-service
-
-  redis:
-    image: redis:6.2.7-alpine
     ports:
-      - 6379:6379
-    healthcheck:
-      test: "redis-cli ping || exit 1"
-      interval: 1s
-      timeout: 3s
-      retries: 5
-    profiles:
-      - rails-test
-      - backend
+     - 3000:3000
+    env_file:
+      - .env
 
   mysql:
     image: mysql:8.0.23
@@ -61,7 +25,6 @@ services:
       - 3306:3306
     volumes:
       - db-data:/var/lib/mysql
-      - ./mysql:/docker-entrypoint-initdb.d
     environment:
       MYSQL_ROOT_PASSWORD: "root"
     healthcheck:
@@ -69,14 +32,7 @@ services:
       interval: 1s
       timeout: 10s
       retries: 5
-    profiles:
-      - rails-test
-      - backend
 
 volumes:
   db-data:
   bundle:
-
-networks:
-  default:
-    name: rails
