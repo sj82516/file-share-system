@@ -17,15 +17,28 @@ class UsersController < ApplicationController
   end
 
   def login
+    # TODO: add rate limit to prevent brute force attack
+
     email = params[:email]
     password = params[:password]
     return render json: { error: "Invalid email or password" }, status: 400 if email.blank? || password.blank?
 
     user = User.find_by(email: email)
     if user && user.authenticate(password)
-      render json: {}, status: 200
+      render json: { access_token: create_access_token(user: user) }, status: 200
     else
       render json: { error: "Invalid email or password" }, status: 401
     end
+  end
+
+  private
+
+  def create_access_token(user:)
+    AccessTokenService.new.encode(
+      {
+        user_id: user.id,
+        exp: 24.hours.from_now.to_i
+      }
+    )
   end
 end

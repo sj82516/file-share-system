@@ -40,9 +40,13 @@ describe "POST /users/login", :request do
   context "when user provide valid credential" do
     let!(:user) { create(:user, email: email, password: password) }
     it 'should return access token' do
+      access_token = "access_token"
+      expect_any_instance_of(AccessTokenService).to receive(:encode).and_return(access_token)
+
       do_action
 
       expect(response).to have_http_status(:ok)
+      expect(JSON.parse(response.body)).to eq({ "access_token" => access_token })
     end
   end
 end
