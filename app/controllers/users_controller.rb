@@ -12,7 +12,6 @@ class UsersController < ApplicationController
       return render json: { error: "Invalid email or password" }, status: 400
     end
 
-    # password should be encrypted
     render json: {}, status: 201
   end
 
