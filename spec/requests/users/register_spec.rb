@@ -20,6 +20,31 @@ describe "POST /users/register", :request do
     end
   end
 
+  context "when user doesn't provide password" do
+    it "should return an error" do
+      do_action
+      expect(response).to have_http_status(:bad_request)
+    end
+  end
+
+  context "when user provide invalid email format" do
+    let(:email) { "test" }
+    it "should return an error" do
+      do_action
+      expect(response).to have_http_status(:bad_request)
+    end
+  end
+
+  context "when user provide invalid password format" do
+    let(:email) { "test@mail.com" }
+    let(:password) { "123" }
+
+    it "should return an error" do
+      do_action
+      expect(response).to have_http_status(:bad_request)
+    end
+  end
+
   context "when user provide valid data" do
     let(:email) { "test@mail.com" }
     let(:password) { "123456" }
