@@ -7,6 +7,7 @@ class AccessTokenService
   end
 
   def encode(payload)
+    payload[:exp] = 1.day.from_now.to_i
     JWT.encode(payload, hmac_secret, ALGO)
   end
 
