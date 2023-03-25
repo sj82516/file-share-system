@@ -19,10 +19,11 @@ class UsersController < ApplicationController
   def login
     email = params[:email]
     password = params[:password]
+    return render json: { error: "Invalid email or password" }, status: 400 if email.blank? || password.blank?
 
     user = User.find_by(email: email)
     if user && user.authenticate(password)
-      render json: { token: user.token }, status: 200
+      render json: {}, status: 200
     else
       render json: { error: "Invalid email or password" }, status: 401
     end
