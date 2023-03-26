@@ -3,7 +3,7 @@ class AccessTokenService
 
   DECODE_ERROR = "Invalid access token.".freeze
   def initialize
-    self.hmac_secret = Rails.application.credentials.access_token_secret
+    self.hmac_secret = ENV["ACCESS_TOKEN_SECRET"]
   end
 
   def encode(payload)

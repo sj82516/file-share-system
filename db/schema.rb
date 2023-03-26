@@ -10,7 +10,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_03_25_135833) do
+ActiveRecord::Schema[7.0].define(version: 2023_03_25_230758) do
+  create_table "storage_files", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "status", default: 0, null: false
+    t.string "name", null: false
+    t.string "file_type", null: false
+    t.string "size", null: false
+    t.string "key", null: false
+    t.timestamp "uploaded_at"
+    t.timestamp "shared_at"
+    t.timestamp "shared_expired_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "users", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "email", null: false
     t.string "password_digest"

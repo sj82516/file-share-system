@@ -8,6 +8,7 @@ class ApplicationController < ActionController::API
     token = request.headers["Authorization"]
     return nil if token.blank?
 
+    token = token.split(" ").last
     begin
       payload = AccessTokenService.new.decode(token)
       return User.find(payload["user_id"])
