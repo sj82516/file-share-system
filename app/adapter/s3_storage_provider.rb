@@ -20,7 +20,8 @@ class S3StorageProvider
 
   def public_object(storage_file)
     object_key = "storage_files/#{storage_file.user.id}/#{storage_file.key}"
-    shared_object_key = "#{storage_file.key}"
+    shared_object_key = "share/#{storage_file.key}"
+
     @client.copy_object({
       bucket: PUBLIC_BUCKET,
       copy_source: "#{PRIVATE_BUCKET}/#{object_key}",
