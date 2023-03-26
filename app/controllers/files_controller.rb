@@ -27,7 +27,7 @@ class FilesController < ApplicationController
     file_id = params[:id]
     begin
       storage_file = Usecases::Files::Share.run(file_id: file_id, current_user: current_user)
-      render json: { share_link: 'public_url' }
+      render json: { share_link: storage_file.decorate.share_link }
     rescue ::Usecases::Files::Share::ERROR_FILE_NOT_FOUND
       return render json: { error: 'file not found' }, status: :not_found
     rescue Usecases::Files::Share::ERROR_FILE_NOT_UPLOADED
