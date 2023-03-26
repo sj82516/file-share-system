@@ -15,11 +15,7 @@ RSpec.describe 'POST /files', type: :request do
 
   context 'user is logged in' do
     let!(:user) { create(:user) }
-    let(:header) {
-      {
-        Authorization: "Bearer #{AccessTokenService.new.encode(user_id: user.id)}",
-      }
-    }
+    let(:header) { generate_valid_user_header(user: user) }
 
     context "when file missing file_name" do
       let(:file) {

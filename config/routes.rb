@@ -8,4 +8,5 @@ Rails.application.routes.draw do
   post "users/login", to: "users#login"
 
   post "files/upload", to: "files#upload"
+  post "files/:id/share", to: "files#share"
 end

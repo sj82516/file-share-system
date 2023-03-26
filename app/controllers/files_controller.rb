@@ -42,5 +42,12 @@ class FilesController < ApplicationController
   end
 
   def share
+    file_id = params[:id]
+    storage_file = StorageFile.find_by(id: file_id)
+    return render json: { error: 'file is not found' }, status: :not_found if storage_file.blank?
+    return render json: { error: 'file is not uploaded' }, status: :forbidden unless storage_file.uploaded?
+
+    S3StorageProvider.new.public_object(storage_file: storage_file)
+    render json: { share_link: 'public_url' }
   end
 end
