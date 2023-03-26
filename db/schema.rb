@@ -23,6 +23,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_25_230758) do
     t.timestamp "shared_expired_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["key"], name: "index_storage_files_on_key", unique: true
+    t.index ["user_id"], name: "index_storage_files_on_user_id"
   end
 
   create_table "users", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
