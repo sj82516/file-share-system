@@ -1,5 +1,7 @@
 class Usecases::Files::Upload
-  ERROR_GENERATE_KEY = StandardError.new("failed_generate_key")
+  class ERROR_GENERATE_KEY < StandardError
+  end
+
   class << self
     def run(file_name:, file_size:, file_type:, current_user:, try_times: 3)
       presigned_url = generate_file(file_name, file_size, file_type, current_user, try_times)
@@ -25,7 +27,7 @@ class Usecases::Files::Upload
 
         return S3StorageProvider.new.create_upload_presigned_url(current_user, key, file_type, file_size)
       rescue ActiveRecord::RecordNotUnique
-        return generate_file(file_name, file_size, file_type, times + 1)
+        return generate_file(file_name, file_size, file_type, current_user, times - 1)
       end
 
       nil

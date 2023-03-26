@@ -17,7 +17,7 @@ class FilesController < ApplicationController
       presigned_url = Usecases::Files::Upload.run(file_name: file_name, file_type: file_type, file_size: file_size,
         current_user: current_user)
       render json: { presigned_url: presigned_url }
-    rescue Exception => e
+    rescue Usecases::Files::Upload::ERROR_GENERATE_KEY => e
       Rails.logger.error(e)
       return render json: { error: 'failed to generate file' }, status: :internal_server_error
     end
@@ -25,13 +25,15 @@ class FilesController < ApplicationController
 
   def share
     file_id = params[:id]
-    storage_file = StorageFile.find_by(id: file_id)
-    return render json: { error: 'file is not found' }, status: :not_found if storage_file.blank?
-    return render json: { error: 'not allowed'}, status: :forbidden unless storage_file.user == current_user
-    return render json: { error: 'file is not uploaded' }, status: :bad_request unless storage_file.uploaded?
-
-    S3StorageProvider.new.public_object(storage_file: storage_file)
-    StorageFile.update(file_id, shared_at: Time.now, shared_expired_at: Time.now + 1.day)
-    render json: { share_link: 'public_url' }
+    begin
+      storage_file = Usecases::Files::Share.run(file_id: file_id, current_user: current_user)
+      render json: { share_link: 'public_url' }
+    rescue ::Usecases::Files::Share::ERROR_FILE_NOT_FOUND
+      return render json: { error: 'file not found' }, status: :not_found
+    rescue Usecases::Files::Share::ERROR_FILE_NOT_UPLOADED
+      return render json: { error: 'file is not uploaded' }, status: :bad_request
+    rescue Usecases::Files::Share::ERROR_NOT_ALLOWED
+      return render json: { error: 'not allowed' }, status: :forbidden
+    end
   end
 end
