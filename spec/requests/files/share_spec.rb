@@ -51,9 +51,48 @@ RSpec.describe 'post /files/:id/share', type: :request do
           expect(response).to have_http_status(200)
           expect(storage_file.reload.shared_at.to_i).to eq(now.to_i)
           expect(storage_file.reload.shared_expired_at.to_i).to eq((now + Usecases::Files::Share::SHARE_EXPIRE_DURATION)
-                                                                 .to_i)
+                                                                     .to_i)
         end
       end
+    end
+
+    context "when file is already share" do
+      context "when share link is valid" do
+        let(:storage_file) { create(:storage_file, :shared, user: user) }
+
+        it "returns public url" do
+          now = Time.now
+          Timecop.freeze(now) do
+            expect_any_instance_of(S3StorageProvider).not_to receive(:public_object).with(storage_file: storage_file)
+            do_action
+
+            expect(response).to have_http_status(200)
+            expect(storage_file.reload.shared_at.to_i).to eq(now.to_i)
+            expect(storage_file.reload.shared_expired_at.to_i).to eq((now + Usecases::Files::Share::SHARE_EXPIRE_DURATION)
+                                                                       .to_i)
+          end
+        end
+      end
+
+      context "when share link is not valid" do
+        let(:storage_file) { create(:storage_file, :share_expired, user: user) }
+
+        it "should share again" do
+          now = Time.now
+          Timecop.freeze(now) do
+            expect_any_instance_of(S3StorageProvider).to receive(:public_object).with(storage_file: storage_file).and_return('public_url')
+            do_action
+
+            expect(response).to have_http_status(200)
+            expect(storage_file.reload.shared_at.to_i).to eq(now.to_i)
+            expect(storage_file.reload.shared_expired_at.to_i).to eq((now + Usecases::Files::Share::SHARE_EXPIRE_DURATION)
+                                                                       .to_i)
+          end
+
+        end
+
+      end
+
     end
   end
 end

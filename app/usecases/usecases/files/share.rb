@@ -3,8 +3,10 @@ class Usecases::Files::Share
 
   class ERROR_FILE_NOT_FOUND < StandardError
   end
+
   class ERROR_FILE_NOT_UPLOADED < StandardError
   end
+
   class ERROR_NOT_ALLOWED < StandardError
   end
 
@@ -15,6 +17,7 @@ class Usecases::Files::Share
       raise ERROR_FILE_NOT_FOUND if storage_file.blank?
       raise ERROR_NOT_ALLOWED unless storage_file.user == current_user
       raise ERROR_FILE_NOT_UPLOADED unless storage_file.uploaded?
+      return storage_file if storage_file.shared?
 
       S3StorageProvider.new.public_object(storage_file: storage_file)
 
