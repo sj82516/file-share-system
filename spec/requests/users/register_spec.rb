@@ -57,7 +57,7 @@ describe "POST /users/register", :request do
   end
 
   context "when user email is duplcate" do
-    let!(:user) { create(:user, email: email, password: "123") }
+    let!(:user) { create(:user, email: email, password: "123456") }
     let(:email) { "test@mail.com" }
     let(:password) { "123456" }
 

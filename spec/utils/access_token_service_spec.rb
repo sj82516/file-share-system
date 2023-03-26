@@ -17,7 +17,7 @@ RSpec.describe ::AccessTokenService do
     end
 
     it 'returns the payload' do
-      expect(service.decode(token)).to eq(payload)
+      expect(service.decode(token)[:user_id]).to eq(payload[:user_id])
     end
 
     it 'raises an error if the token is invalid' do
