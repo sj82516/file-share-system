@@ -4,8 +4,8 @@ class S3StorageProvider
   def initialize
     @aws_config = Rails.application.credentials.aws
     @client = Aws::S3::Client.new({
-      access_key_id: @aws_config[:access_key_id],
-      secret_access_key: @aws_config[:secret_access_key]
+      access_key_id: ENV['AWS_ACCESS_KEY_ID'],
+      secret_access_key: ENV['AWS_SECRET_ACCESS_KEY'],
     })
   end
 
