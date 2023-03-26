@@ -21,6 +21,21 @@ RSpec.describe 'POST /files', type: :request do
       }
     }
 
+    context "when file missing file_name" do
+      let(:file) {
+        {
+          type: 'text/plain',
+          size: 10,
+        }
+      }
+
+      it 'return error' do
+        do_action
+
+        expect(response).to have_http_status(400)
+      end
+    end
+
     context 'file is valid' do
       let(:file) {
         {

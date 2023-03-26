@@ -11,6 +11,8 @@ class FilesController < ApplicationController
     file_type = params[:file][:type]
     file_size = params[:file][:size]&.to_i
 
+    return render json: { error: 'file is invalid' }, status: :bad_request if file_name.blank? || file_type.blank? || file_size.blank?
+
     presigned_url = S3StorageProvider.new.create_upload_presigned_url(current_user, file_name, file_type, file_size)
     key = RandomStorageFileKeyGenerator.generate
 
