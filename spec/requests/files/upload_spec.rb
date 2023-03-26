@@ -46,8 +46,9 @@ RSpec.describe 'POST /files', type: :request do
       }
 
       it 'return presigned url' do
-        expect_any_instance_of(S3StorageProvider).to receive(:create_upload_presigned_url).with(user, file[:name], file[:type], file[:size]).and_return('presigned_url')
         key = 'key'
+        expect_any_instance_of(S3StorageProvider).to receive(:create_upload_presigned_url).with(user, key,
+          file[:type], file[:size]).and_return('presigned_url')
         expect(RandomStorageFileKeyGenerator).to receive(:generate).and_return(key)
         do_action
 

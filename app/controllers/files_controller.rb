@@ -26,16 +26,19 @@ class FilesController < ApplicationController
     end
 
     begin
-      presigned_url = S3StorageProvider.new.create_upload_presigned_url(current_user, file_name, file_type, file_size)
       key = RandomStorageFileKeyGenerator.generate
 
+      #TODO use Bloom Filter to check collision. It would be much more efficient than using DB query
       storage_file = StorageFile.new(user: current_user, name: file_name, file_type: file_type, status: :init,
         size: file_size, key: key)
       storage_file.save!
-      presigned_url
+
+      return S3StorageProvider.new.create_upload_presigned_url(current_user, key, file_type, file_size)
     rescue ActiveRecord::RecordNotUnique
-      generate_file(file_name, file_size, file_type, times + 1)
+      return generate_file(file_name, file_size, file_type, times + 1)
     end
+
+    nil
   end
 
   def share
