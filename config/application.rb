@@ -25,5 +25,6 @@ module RailsTemplate
     config.api_only = true
 
     config.autoload_paths << Rails.root.join('app', 'utils')
+    config.autoload_paths << Rails.root.join('app', 'usecases')
   end
 end
