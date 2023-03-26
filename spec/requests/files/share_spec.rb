@@ -22,6 +22,18 @@ RSpec.describe 'post /files/:id/share', type: :request do
       it 'returns error' do
         do_action
 
+        expect(response).to have_http_status(400)
+      end
+    end
+
+    context 'when user is not the owner of file' do
+      let(:user2) { create(:user, email: "test@mail.com") }
+      let(:storage_file) { create(:storage_file, user: user2, status: :uploaded) }
+      let(:user) { create(:user) }
+
+      it 'returns error' do
+        do_action
+
         expect(response).to have_http_status(403)
       end
     end
