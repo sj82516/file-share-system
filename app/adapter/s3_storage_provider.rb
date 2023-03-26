@@ -18,7 +18,7 @@ class S3StorageProvider
       content_length: file_size)
   end
 
-  def public_object(storage_file)
+  def public_object(storage_file:)
     object_key = "storage_files/#{storage_file.user.id}/#{storage_file.key}"
     shared_object_key = "share/#{storage_file.key}"
 
@@ -27,6 +27,5 @@ class S3StorageProvider
       copy_source: "#{PRIVATE_BUCKET}/#{object_key}",
       key: shared_object_key
     })
-    storage_file.update!(status: :shared)
   end
 end
