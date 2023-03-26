@@ -1,4 +1,6 @@
 class Usecases::Files::Share
+  SHARE_EXPIRE_DURATION = 1.day
+
   class ERROR_FILE_NOT_FOUND < StandardError
   end
   class ERROR_FILE_NOT_UPLOADED < StandardError
@@ -7,6 +9,7 @@ class Usecases::Files::Share
   end
 
   class << self
+
     def run(file_id:, current_user:)
       storage_file = StorageFile.find_by(id: file_id)
       raise ERROR_FILE_NOT_FOUND if storage_file.blank?
@@ -16,7 +19,7 @@ class Usecases::Files::Share
       S3StorageProvider.new.public_object(storage_file: storage_file)
 
       storage_file.shared_at = Time.now
-      storage_file.shared_expired_at = Time.now + 1.day
+      storage_file.shared_expired_at = Time.now + SHARE_EXPIRE_DURATION
       storage_file.save!
 
       storage_file
