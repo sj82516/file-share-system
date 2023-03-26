@@ -28,4 +28,36 @@ class S3StorageProvider
       key: shared_object_key
     })
   end
+
+  def signed_cookie_for_private_files(user:)
+    key_pair_id = ENV["AWS_SIGNED_COOKIE_KEY_PAIR_ID"]
+    private_key = OpenSSL::PKey::RSA.new(File.read("config/private_key.pem"))
+    resource_url = "#{ENV['PRIVATE_CDN_HOST_NAME']}storage_files/#{user.id}/*"
+
+    # Generate policy statement
+    expired_at = Time.now.to_i + 600
+    policy = {
+      Statement: [
+        {
+          Resource: resource_url,
+          Condition: {
+            "DateLessThan": {
+              "AWS:EpochTime": expired_at
+            }
+          }
+        }
+      ]
+    }.to_json
+
+    # Create CloudFront signer
+    signer = Aws::CloudFront::CookieSigner.new(private_key: private_key, key_pair_id: key_pair_id)
+    # Sign the policy statement
+    signature = signer.signed_cookie(resource_url, policy: policy)
+    {
+      "Key-Pair-Id" => key_pair_id,
+      "Policy" => signature["CloudFront-Policy"],
+      "Signature" => signature["CloudFront-Signature"],
+      "Expires" => expired_at
+    }
+  end
 end

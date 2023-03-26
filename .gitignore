@@ -29,3 +29,5 @@
 /config/master.key
 
 .env
+
+config/private_key.pem
