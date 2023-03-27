@@ -1,8 +1,6 @@
 FROM ruby:3.1.2 AS base
 
-RUN apt-get update -qq && apt-get install -y nodejs default-mysql-client pv awscli
-#ENV LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libjemalloc.so.2
-
+RUN apt-get update -qq && apt-get install -y nodejs default-mysql-client awscli
 
 ENV GEM_PATH /bundle
 ENV GEM_HOME /bundle
@@ -10,7 +8,6 @@ ENV BUNDLE_PATH /bundle
 
 WORKDIR /app
 COPY Gemfile Gemfile.lock ./
-
 
 RUN bundle install
 
