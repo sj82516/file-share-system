@@ -11,4 +11,4 @@ Basic File-Share system, let users upload files and share them with others.
 2. Run docker compose `docker-compose up -d --build`
 
 ## Architecture
-[notion link](https://www.notion.so/System-Design-0a31e4d0f8ea4d8281030e81c2b7cd14)
+[notion link](https://circular-carpet-0f1.notion.site/PicCollage-956bd5c5b31a4775aafab2384e09579e)
