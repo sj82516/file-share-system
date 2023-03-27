@@ -15,17 +15,23 @@ class Usecases::Files::Share
     def run(file_id:, current_user:)
       storage_file = StorageFile.find_by(id: file_id)
       raise ERROR_FILE_NOT_FOUND if storage_file.blank?
-      raise ERROR_NOT_ALLOWED unless storage_file.user == current_user
-      raise ERROR_FILE_NOT_UPLOADED unless storage_file.uploaded?
-      return storage_file if storage_file.shared?
 
-      S3StorageProvider.new.public_object(storage_file: storage_file)
+      # prevent user share multiple times in a short period
+      ActiveRecord::Base.transaction do
+        storage_file.lock!
 
-      storage_file.shared_at = Time.now
-      storage_file.shared_expired_at = Time.now + SHARE_EXPIRE_DURATION
-      storage_file.save!
+        raise ERROR_NOT_ALLOWED unless storage_file.user == current_user
+        raise ERROR_FILE_NOT_UPLOADED unless storage_file.uploaded?
+        return storage_file if storage_file.shared?
 
-      storage_file
+        S3StorageProvider.new.public_object(storage_file: storage_file)
+
+        storage_file.shared_at = Time.now
+        storage_file.shared_expired_at = Time.now + SHARE_EXPIRE_DURATION
+        storage_file.save!
+
+        storage_file
+      end
     end
   end
 end
