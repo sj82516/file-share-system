@@ -32,6 +32,8 @@ class Usecases::Files::Share
 
         storage_file
       end
+
+      storage_file
     end
   end
 end

@@ -4,7 +4,7 @@ class StorageFileDecorator < Draper::Decorator
   delegate :private_link, to: :object
 
   def share_link
-    return "" if shared?
+    return "" unless shared?
     "#{ENV['PUBLIC_CDN_HOSTNAME']}share/#{key}"
   end
 

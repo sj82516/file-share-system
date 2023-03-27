@@ -21,6 +21,7 @@ FactoryBot.define do
     name { "test.txt" }
     size { 10 }
     key { "key" }
+    user { create(:user) }
 
     trait :shared do
       status { :uploaded }

@@ -1,7 +1,8 @@
 class AccessTokenService
   ALGO = 'HS256'
 
-  DECODE_ERROR = "Invalid access token.".freeze
+  class DECODE_ERROR < StandardError
+  end
   def initialize
     self.hmac_secret = ENV["ACCESS_TOKEN_SECRET"]
   end
