@@ -32,10 +32,10 @@ class S3StorageProvider
   def signed_cookie_for_private_files(user:)
     key_pair_id = ENV["AWS_SIGNED_COOKIE_KEY_PAIR_ID"]
     private_key = OpenSSL::PKey::RSA.new(File.read("config/private_key.pem"))
-    resource_url = "#{ENV['PRIVATE_CDN_HOST_NAME']}storage_files/#{user.id}/*"
+    resource_url = "#{ENV['PRIVATE_CDN_HOSTNAME']}storage_files/#{user.id}/*"
 
     # Generate policy statement
-    expired_at = Time.now.to_i + 600
+    expired_at = Time.now.to_i + 60000
     policy = {
       Statement: [
         {

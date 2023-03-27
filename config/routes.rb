@@ -9,4 +9,5 @@ Rails.application.routes.draw do
 
   post "files/upload", to: "files#upload"
   post "files/:id/share", to: "files#share"
+  get "files", to: "files#index"
 end
