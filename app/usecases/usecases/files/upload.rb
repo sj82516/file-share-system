@@ -1,6 +1,5 @@
 class Usecases::Files::Upload
-  class ERROR_GENERATE_KEY < StandardError
-  end
+  class ERROR_GENERATE_KEY < StandardError; end
 
   class << self
     def run(file_name:, file_size:, file_type:, current_user:, try_times: 3)

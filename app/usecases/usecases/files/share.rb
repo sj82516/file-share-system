@@ -1,14 +1,9 @@
 class Usecases::Files::Share
   SHARE_EXPIRE_DURATION = 1.day
 
-  class ERROR_FILE_NOT_FOUND < StandardError
-  end
-
-  class ERROR_FILE_NOT_UPLOADED < StandardError
-  end
-
-  class ERROR_NOT_ALLOWED < StandardError
-  end
+  class ERROR_FILE_NOT_FOUND < StandardError;end
+  class ERROR_FILE_NOT_UPLOADED < StandardError; end
+  class ERROR_NOT_ALLOWED < StandardError;end
 
   class << self
 
