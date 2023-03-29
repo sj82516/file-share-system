@@ -1,7 +1,9 @@
+# User share a file to public
 class Usecases::Files::Share
   SHARE_EXPIRE_DURATION = 1.day
 
   class ERROR_FILE_NOT_FOUND < StandardError;end
+  # File should be uploaded before share
   class ERROR_FILE_NOT_UPLOADED < StandardError; end
   class ERROR_NOT_ALLOWED < StandardError;end
 

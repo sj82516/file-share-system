@@ -1,5 +1,6 @@
+# List all files of current user
+# provide private link
 class Usecases::Files::List
-
   class << self
     def run(current_user:)
       storage_files = StorageFile.where(user: current_user)

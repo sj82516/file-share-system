@@ -1,3 +1,4 @@
+# Generate presigned url for uploading file
 class Usecases::Files::Upload
   class ERROR_GENERATE_KEY < StandardError; end
 
