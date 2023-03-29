@@ -2,13 +2,10 @@ class UsersController < ApplicationController
 
   def register
     begin
-      User.create!(
-        email: params[:email],
-        password: params[:password]
-      )
-    rescue ActiveRecord::RecordNotUnique
+      Usecases::Users::Register.run(email: params[:email], password: params[:password])
+    rescue Usecases::Users::Register::ERROR_EMAIL_DUPLICATE
       return render json: { error: "Email already exists" }, status: 409
-    rescue ActiveRecord::RecordInvalid
+    rescue Usecases::Users::Register::ERROR_INVALID
       return render json: { error: "Invalid email or password" }, status: 400
     end
 
