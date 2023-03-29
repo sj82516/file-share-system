@@ -7,7 +7,7 @@ Basic File-Share system, let users upload files and share them with others.
 3. AWS cloudfront distribution for the buckets.
 4. For local development, you need to install `docker`.
 
-## Installation
+## Execution 
 1. Setup the environment variables in the `.env` file by copying the `.env.example` file.
 2. Run docker compose `docker-compose up -d --build`
 
