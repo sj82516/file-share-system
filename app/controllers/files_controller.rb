@@ -2,11 +2,9 @@ class FilesController < ApplicationController
   before_action :authenticate_user!
 
   def index
-    storage_files = StorageFile.where(user: current_user)
-    signed_cookie = S3StorageProvider.new.signed_cookie_for_private_files(user: current_user)
+    storage_files = Usecases::Files::List.run(current_user: current_user)
     render json: {
-      files: storage_files.map do |file|
-        f = file.decorate(context: { signed_cookie: signed_cookie })
+     files: storage_files.map do |f|
         {
           **f.attributes,
           share_link: f.share_link,
