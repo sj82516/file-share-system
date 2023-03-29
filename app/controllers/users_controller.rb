@@ -22,21 +22,13 @@ class UsersController < ApplicationController
     password = params[:password]
     return render json: { error: "Invalid email or password" }, status: 400 if email.blank? || password.blank?
 
-    user = User.find_by(email: email)
-    if user && user.authenticate(password)
-      render json: { access_token: create_access_token(user: user) }, status: 200
-    else
-      render json: { error: "Invalid email or password" }, status: 401
+    begin
+      access_token = Usecases::Users::Login.run(email: email, password: password)
+      render json: { access_token: access_token }, status: 200
+    rescue Usecases::Users::Login::ERROR_USER_NOT_FOUND
+      return render json: { error: "User not found" }, status: 401
+    rescue Usecases::Users::Login::ERROR_WRONG_PASSWORD
+      return render json: { error: "Wrong password" }, status: 401
     end
-  end
-
-  private
-
-  def create_access_token(user:)
-    AccessTokenService.new.encode(
-      {
-        user_id: user.id,
-      }
-    )
   end
 end

@@ -4,7 +4,7 @@ class Usecases::Files::Share
 
   class ERROR_FILE_NOT_FOUND < StandardError;end
   # File should be uploaded before share
-  class ERROR_FILE_NOT_UPLOADED < StandardError; end
+  class ERROR_FILE_NOT_UPLOADED < StandardError;end
   class ERROR_NOT_ALLOWED < StandardError;end
 
   class << self
