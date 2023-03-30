@@ -1,6 +1,6 @@
 FROM ruby:3.1.2 AS base
 
-RUN apt-get update -qq && apt-get install -y nodejs default-mysql-client awscli
+RUN apt-get update -qq && apt-get install -y nodejs default-mysql-client
 
 ENV GEM_PATH /bundle
 ENV GEM_HOME /bundle
@@ -15,4 +15,4 @@ COPY . /app
 
 FROM base AS server
 
-CMD bundle install && bin/rails server -b 0.0.0.0
+CMD bin/rails server -b 0.0.0.0
